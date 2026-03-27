@@ -103,6 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (navAuth) navAuth.style.display = 'none';
         if (navLogout) navLogout.style.display = 'inline-block';
         if (navProfile) navProfile.style.display = 'inline-block';
+
+        const homeLoginBtn = document.getElementById('homeLoginBtn');
+        const homeRegisterBtn = document.getElementById('homeRegisterBtn');
+        if (homeLoginBtn) homeLoginBtn.style.display = 'none';
+        if (homeRegisterBtn) homeRegisterBtn.style.display = 'none';
     }
     
     function showUnauthenticatedUI() {
@@ -110,6 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (navLogout) navLogout.style.display = 'none';
         if (navProfile) navProfile.style.display = 'none';
         currentUser = null;
+
+        const homeLoginBtn = document.getElementById('homeLoginBtn');
+        const homeRegisterBtn = document.getElementById('homeRegisterBtn');
+        if (homeLoginBtn) homeLoginBtn.style.display = 'inline-flex';
+        if (homeRegisterBtn) homeRegisterBtn.style.display = 'inline-flex';
     }
     
     async function loadUserProfile() {
@@ -459,6 +469,17 @@ document.addEventListener('DOMContentLoaded', function() {
         navLogout.addEventListener('click', (e) => {
             e.preventDefault();
             handleLogout();
+        });
+
+        // Home quick actions
+        document.getElementById('homeSearchBtn')?.addEventListener('click', () => navigateTo('search'));
+        document.getElementById('homeLoginBtn')?.addEventListener('click', () => {
+            navigateTo('auth');
+            switchAuthTab('login');
+        });
+        document.getElementById('homeRegisterBtn')?.addEventListener('click', () => {
+            navigateTo('auth');
+            switchAuthTab('register');
         });
         
         // Mobile menu

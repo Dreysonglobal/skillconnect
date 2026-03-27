@@ -179,6 +179,47 @@ body {
     background: white;
 }
 
+/* Home Quick Actions */
+.home-actions {
+    padding: 2rem 0;
+}
+
+.home-actions-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.home-actions-text h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.home-actions-text p {
+    color: #666;
+}
+
+.home-actions-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.home-actions-buttons .btn-primary,
+.home-actions-buttons .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
 /* How It Works */
 .how-it-works {
     padding: 4rem 0;
@@ -595,5 +636,15 @@ body {
     
     .steps {
         grid-template-columns: 1fr;
+    }
+
+    .home-actions-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .home-actions-buttons {
+        width: 100%;
+        justify-content: flex-start;
     }
 }
