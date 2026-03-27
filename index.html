@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillConnect - Connect with Skilled Professionals</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-handshake"></i>
+                <span>SkillConnect</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#" id="navHome" class="active">Home</a>
+                <a href="#" id="navSearch">Search</a>
+                <a href="#" id="navProfile" style="display: none;">My Profile</a>
+                <a href="#" id="navAuth">Login / Register</a>
+                <a href="#" id="navLogout" style="display: none;">Logout</a>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app">
+        <!-- Home Page -->
+        <div id="homePage" class="page active">
+            <!-- Hero Slider -->
+            <div class="hero-slider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <img src="images/carpenter.webp" alt="Carpenter">
+                        <div class="slide-content">
+                            <h1>Find Expert Carpenters</h1>
+                            <p>Are you a skilled carpenter looking for new opportunities? Register today!</p>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="images/mechanic.png" alt="Mechanic">
+                        <div class="slide-content">
+                            <h1>Trusted Mechanics</h1>
+                            <p>Are you a skilled mechanic looking for new opportunities? Register today!</p>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="images/electrician.png" alt="Electrician">
+                        <div class="slide-content">
+                            <h1>Certified Electricians</h1>
+                            <p>Are you a skilled electrician looking for new opportunities? Register today!</p>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="images/media.png" alt="Graphic Designer">
+                        <div class="slide-content">
+                            <h1>Skilled Professionals</h1>
+                            <p>Graphics Designer, Virtual Assistant, Product Manager, Social Media Content Creator</p>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="images/taxi.png" alt="Collaboration">
+                        <div class="slide-content">
+                            <h1>Do You Run a Transportation Business?</h1>
+                            <p>Either its your private Car, Keke, or Bike register as a Driver and expand your client base.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="slider-btn prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="how-it-works">
+                <div class="container">
+                    <h2 class="section-title">How SkillConnect Works</h2>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h3>1. Register</h3>
+                            <p>Create your account as a skilled professional. It's free and takes just a minute.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <h3>2. Complete Your Profile</h3>
+                            <p>Add your skills, location, business name, and profile picture to showcase your expertise.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3>3. Get Found</h3>
+                            <p>Customers search by skill and location to find professionals like you.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h3>4. Connect</h3>
+                            <p>Receive calls and messages from potential clients in your area.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Page -->
+        <div id="searchPage" class="page">
+            <div class="container">
+                <div class="search-header">
+                    <h2>Find Professionals</h2>
+                    <div class="search-filters">
+                        <input type="text" id="skillSearch" placeholder="Search by skill (e.g., Electrician)">
+                        <select id="countryFilter">
+                            <option value="">All Countries</option>
+                            <option value="Nigeria">Nigeria</option>
+                        </select>
+                        <select id="stateFilter">
+                            <option value="">All States</option>
+                        </select>
+                        <select id="lgaFilter">
+                            <option value="">All LGAs</option>
+                        </select>
+                        <input type="text" id="areaFilter" placeholder="Area/Location">
+                        <button id="searchBtn" class="btn-primary"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </div>
+                <div id="searchResults" class="profiles-grid">
+                    <div class="loading">Click Search to find professionals</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profilePage" class="page">
+            <div class="container">
+                <div class="profile-container">
+                    <h2>My Profile</h2>
+                    <form id="profileForm">
+                        <div class="profile-avatar-section">
+                            <div class="avatar-preview">
+                                <img id="avatarPreview" src="https://via.placeholder.com/150" alt="Profile Picture">
+                            </div>
+                            <div class="avatar-upload">
+                                <label for="avatarUpload" class="btn-secondary">Upload Picture</label>
+                                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Business Name</label>
+                            <input type="text" id="businessName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" id="phoneNumber" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Skill / Profession *</label>
+                            <input type="text" id="skill" list="skillSuggestions" placeholder="Type your skill (e.g., Electrician)" required>
+                            <datalist id="skillSuggestions">
+                                <option value="Carpenter"></option>
+                                <option value="Mechanic"></option>
+                                <option value="Electrician"></option>
+                                <option value="Graphic Designer"></option>
+                                <option value="Plumber"></option>
+                                <option value="Painter"></option>
+                                <option value="Web Developer"></option>
+                                <option value="Photographer"></option>
+                            </datalist>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Country *</label>
+                                <select id="country" required>
+                                    <option value="">Select Country</option>
+                                    <option value="Nigeria">Nigeria</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>State *</label>
+                                <select id="state" required>
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>LGA *</label>
+                                <select id="lga" required>
+                                    <option value="">Select LGA</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Area / Neighborhood *</label>
+                                <input type="text" id="area" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Save Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Page -->
+        <div id="authPage" class="page">
+            <div class="container">
+                <div class="auth-container">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-auth="login">Login</button>
+                        <button class="auth-tab" data-auth="register">Register</button>
+                    </div>
+                    
+                    <div id="loginForm" class="auth-form active">
+                        <h3>Welcome Back</h3>
+                        <form id="loginFormElement">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="loginEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="loginPassword" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Login</button>
+                        </form>
+                    </div>
+                    
+                    <div id="registerForm" class="auth-form">
+                        <h3>Create Account</h3>
+                        <form id="registerFormElement">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="registerEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="registerPassword" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>SkillConnect</h4>
+                    <p>Connecting skilled professionals with those who need them.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> support@skillconnect.com.ng</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; Website Developed By Dreyson Global. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
