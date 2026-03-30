@@ -337,7 +337,7 @@ body {
 .profile-card img {
     width: 100%;
     height: 200px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .profile-card-info {
@@ -509,6 +509,52 @@ body {
 
 .call-btn:hover {
     background: #059669;
+}
+
+/* Customer care button */
+.customer-care-btn {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: #111827;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.customer-care-btn:hover {
+    background: #0f172a;
+    transform: translateY(-1px);
+}
+
+.customer-care-btn i {
+    font-size: 1.1rem;
+}
+
+.customer-care-btn span {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 480px) {
+    .customer-care-btn span {
+        display: none;
+    }
+    .customer-care-btn {
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
 }
 
 /* Auth Page */

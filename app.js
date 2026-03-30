@@ -674,6 +674,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Search
         document.getElementById('searchBtn').addEventListener('click', performSearch);
+
+        // Customer care (WhatsApp)
+        document.getElementById('customerCareBtn')?.addEventListener('click', () => {
+            const url = 'https://wa.me/2349056068122';
+            window.open(url, '_blank', 'noopener,noreferrer');
+        });
         
         // State filter change
         document.getElementById('stateFilter').addEventListener('change', (e) => {
