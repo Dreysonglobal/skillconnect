@@ -99,12 +99,22 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const { data, error } = await supabase.functions.invoke('korapay-initiate', {
-            body: { purpose }
-        });
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData?.session?.access_token;
 
+        if (!accessToken) {
+            alert('Your session is missing. Please logout and login again.');
+            return;
+        }
+
+        const { data, error } = await supabase.functions.invoke('korapay-initiate', {
+            body: { purpose },
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        
         if (error || !data?.reference) {
-            alert('Unable to start payment. Please try again.');
+            const message = data?.error || error?.message || 'Unable to start payment. Please try again.';
+            alert(message);
             return;
         }
 
@@ -306,12 +316,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function handleLogin(event) {
         event.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+        const email = normalizeText(document.getElementById('loginEmail').value);
+        const password = String(document.getElementById('loginPassword').value || '');
         
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         
         if (error) {
+            console.error('Login error:', error);
             alert('Login failed: ' + error.message);
         } else {
             currentUser = data.user;
@@ -324,12 +335,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function handleRegister(event) {
         event.preventDefault();
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
+        const email = normalizeText(document.getElementById('registerEmail').value);
+        const password = String(document.getElementById('registerPassword').value || '');
         
         const { data, error } = await supabase.auth.signUp({ email, password });
         
         if (error) {
+            console.error('Registration error:', error);
             alert('Registration failed: ' + error.message);
         } else {
             // Create profile entry
@@ -487,7 +499,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             return `
                 <div class="profile-card">
-                    <img src="${profile.avatar_url || 'https://via.placeholder.com/300x200'}" alt="${profile.full_name || 'Professional'}">
+                    <img src="${profile.avatar_url || 'images/media.png'}" alt="${profile.full_name || 'Professional'}">
                     <div class="profile-card-info">
                         <h3>${profile.full_name || 'Anonymous'}</h3>
                         <div class="skill"><i class="fas fa-tools"></i> ${profile.skill || 'Not specified'}</div>
