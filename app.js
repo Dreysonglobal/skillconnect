@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const supabaseUrl = 'https://gulrsfkgbdijurhnxvjb.supabase.co';
     const supabaseKey = 'sb_publishable_68Kzq25XsQusalcSz62NpA_g5KHp67Q';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Korapay (public key is safe to expose in the browser)
+    const korapayPublicKey = 'pk_live_MUXfi8AufEnLkaZM8t7kxTLRJQFdL4zh1snkc7ag';
     
     // Global variables
     let currentUser = null;
@@ -21,6 +24,122 @@ document.addEventListener('DOMContentLoaded', function() {
         const digitsOnly = trimmed.replace(/[^\d]/g, '');
         if (!digitsOnly) return '';
         return hasLeadingPlus ? `+${digitsOnly}` : digitsOnly;
+    }
+
+    function formatDateForUi(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function computeBillingState(profile) {
+        const activationPaid = Boolean(profile?.activation_paid_at);
+        const paidUntil = profile?.subscription_paid_until ? new Date(profile.subscription_paid_until) : null;
+        const subscriptionActive = Boolean(paidUntil && paidUntil.getTime() > Date.now());
+        return { activationPaid, subscriptionActive, paidUntil };
+    }
+
+    function updateBillingUI(profile) {
+        const billingPanel = document.getElementById('billingPanel');
+        const billingMessage = document.getElementById('billingMessage');
+        const payActivationBtn = document.getElementById('payActivationBtn');
+        const paySubscriptionBtn = document.getElementById('paySubscriptionBtn');
+
+        if (!billingPanel || !billingMessage || !payActivationBtn || !paySubscriptionBtn) return;
+        if (!currentUser) {
+            billingPanel.style.display = 'none';
+            return;
+        }
+
+        const { activationPaid, subscriptionActive, paidUntil } = computeBillingState(profile);
+        billingPanel.style.display = 'block';
+
+        if (!activationPaid) {
+            billingMessage.textContent = 'To make your skill and profile public and findable, you need to pay ₦300.';
+            payActivationBtn.style.display = 'inline-flex';
+            paySubscriptionBtn.style.display = 'none';
+            return;
+        }
+
+        if (!subscriptionActive) {
+            billingMessage.textContent = 'Your subscription is inactive. Pay ₦300 to renew your monthly subscription and stay public.';
+            payActivationBtn.style.display = 'none';
+            paySubscriptionBtn.style.display = 'inline-flex';
+            return;
+        }
+
+        billingMessage.textContent = `Your profile is public. Next renewal is due on ${formatDateForUi(paidUntil)}.`;
+        payActivationBtn.style.display = 'none';
+        paySubscriptionBtn.style.display = 'inline-flex';
+    }
+
+    async function refreshBillingStatus() {
+        if (!currentUser) return null;
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('activation_paid_at, subscription_paid_until, is_public')
+            .eq('id', currentUser.id)
+            .single();
+
+        if (error) return null;
+        updateBillingUI(data);
+        return data;
+    }
+
+    async function startKorapayPayment(purpose) {
+        if (!currentUser) {
+            alert('Please login first');
+            navigateTo('auth');
+            return;
+        }
+
+        if (!window.Korapay || typeof window.Korapay.initialize !== 'function') {
+            alert('Korapay SDK not loaded. Please refresh the page.');
+            return;
+        }
+
+        const { data, error } = await supabase.functions.invoke('korapay-initiate', {
+            body: { purpose }
+        });
+
+        if (error || !data?.reference) {
+            alert('Unable to start payment. Please try again.');
+            return;
+        }
+
+        const { reference, amount, currency, notification_url, amount_ngn } = data;
+
+        const profile = await refreshBillingStatus();
+        const customerName = normalizeText(profile?.full_name) || normalizeText(currentUser?.email) || 'Customer';
+        const customerEmail = normalizeText(currentUser?.email) || '';
+
+        window.Korapay.initialize({
+            key: korapayPublicKey,
+            reference,
+            amount,
+            currency: currency || 'NGN',
+            customer: { name: customerName, email: customerEmail },
+            notification_url,
+            narration: purpose === 'activation'
+                ? `SkillConnect activation fee (₦${amount_ngn ?? 300})`
+                : `SkillConnect monthly subscription (₦${amount_ngn ?? 300})`,
+            onSuccess: function () {
+                alert('Payment successful. Your account will be updated shortly.');
+                let attempts = 0;
+                const timer = setInterval(async () => {
+                    attempts += 1;
+                    await refreshBillingStatus();
+                    if (attempts >= 10) clearInterval(timer);
+                }, 2000);
+            },
+            onFailed: function () {
+                alert('Payment failed or was canceled.');
+            },
+            onClose: function () {
+                // no-op
+            }
+        });
     }
     
     // Nigerian States and LGAs
@@ -150,6 +269,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.avatar_url) {
                 document.getElementById('avatarPreview').src = data.avatar_url;
             }
+
+            updateBillingUI(data);
+        } else {
+            updateBillingUI(null);
         }
     }
     
@@ -218,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Profile creation error:', profileError);
             }
             
-            alert('Registration successful! Please login.');
+            alert('Registration successful! Please login. After login, you must pay ₦300 to make your profile public, then renew ₦300 monthly to stay public.');
             switchAuthTab('login');
             document.getElementById('registerEmail').value = '';
             document.getElementById('registerPassword').value = '';
@@ -326,7 +449,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const lga = normalizeText(document.getElementById('lgaFilter').value);
         const area = normalizeText(document.getElementById('areaFilter').value);
         
-        let query = supabase.from('profiles').select('*');
+        const nowIso = new Date().toISOString();
+        let query = supabase
+            .from('profiles')
+            .select('*')
+            .eq('is_public', true)
+            .not('activation_paid_at', 'is', null)
+            .gt('subscription_paid_until', nowIso);
         
         if (skill) query = query.ilike('skill', `%${skill}%`);
         if (country) query = query.eq('country', country);
@@ -500,6 +629,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Profile form
         document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+
+        // Billing actions
+        document.getElementById('payActivationBtn')?.addEventListener('click', () => startKorapayPayment('activation'));
+        document.getElementById('paySubscriptionBtn')?.addEventListener('click', () => startKorapayPayment('subscription'));
         
         // Avatar upload
         document.getElementById('avatarUpload').addEventListener('change', handleAvatarUpload);

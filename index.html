@@ -164,6 +164,21 @@
             <div class="container">
                 <div class="profile-container">
                     <h2>My Profile</h2>
+
+                    <div id="billingPanel" class="billing-panel" style="display: none;">
+                        <div class="billing-panel-content">
+                            <h3>Billing</h3>
+                            <p id="billingMessage" class="billing-message"></p>
+                            <div class="billing-actions">
+                                <button id="payActivationBtn" type="button" class="btn-primary">
+                                    Pay ₦300 to make my profile public
+                                </button>
+                                <button id="paySubscriptionBtn" type="button" class="btn-secondary" style="display: none;">
+                                    Pay ₦300 monthly subscription
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <form id="profileForm">
                         <div class="profile-avatar-section">
                             <div class="avatar-preview">
@@ -312,6 +327,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
