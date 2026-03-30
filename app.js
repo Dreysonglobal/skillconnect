@@ -2,6 +2,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Supabase client
     const supabaseUrl = 'https://gulrsfkgbdijurhnxvjb.supabase.co';
+    // NOTE: For Edge Functions + Auth, this should be your Supabase "anon public" key
+    // (Project Settings → API). If you see "Invalid JWT" or auth issues, replace this value.
     const supabaseKey = 'sb_publishable_68Kzq25XsQusalcSz62NpA_g5KHp67Q';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
@@ -56,14 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
         billingPanel.style.display = 'block';
 
         if (!activationPaid) {
-            billingMessage.textContent = 'To make your skill and profile public and findable, you need to pay ₦300.';
+            billingMessage.textContent = 'To make your skill and profile public and findable, you need to pay NGN 300.';
             payActivationBtn.style.display = 'inline-flex';
             paySubscriptionBtn.style.display = 'none';
             return;
         }
 
         if (!subscriptionActive) {
-            billingMessage.textContent = 'Your subscription is inactive. Pay ₦300 to renew your monthly subscription and stay public.';
+            billingMessage.textContent = 'Your subscription is inactive. Pay NGN 300 to renew your monthly subscription and stay public.';
             payActivationBtn.style.display = 'none';
             paySubscriptionBtn.style.display = 'inline-flex';
             return;
@@ -113,8 +115,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         if (error || !data?.reference) {
-            const message = data?.error || error?.message || 'Unable to start payment. Please try again.';
-            alert(message);
+            const rawMessage = data?.detail || data?.error || error?.message || 'Unable to start payment. Please try again.';
+            const message = String(rawMessage || '');
+
+            if (message.toLowerCase().includes('invalid jwt')) {
+                await supabase.auth.signOut();
+                showUnauthenticatedUI();
+                navigateTo('auth');
+                alert('Your login session expired or is invalid. Please login again.');
+                return;
+            }
+
+            alert(message || 'Unable to start payment. Please try again.');
             return;
         }
 
@@ -132,8 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
             customer: { name: customerName, email: customerEmail },
             notification_url,
             narration: purpose === 'activation'
-                ? `SkillConnect activation fee (₦${amount_ngn ?? 300})`
-                : `SkillConnect monthly subscription (₦${amount_ngn ?? 300})`,
+                ? `SkillConnect activation fee (NGN ${amount_ngn ?? 300})`
+                : `SkillConnect monthly subscription (NGN ${amount_ngn ?? 300})`,
             onSuccess: function () {
                 alert('Payment successful. Your account will be updated shortly.');
                 let attempts = 0;
@@ -217,7 +229,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Auth functions
     async function checkAuth() {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if (error && String(error.message || '').toLowerCase().includes('invalid jwt')) {
+            await supabase.auth.signOut();
+            showUnauthenticatedUI();
+            return;
+        }
         
         if (user) {
             currentUser = user;

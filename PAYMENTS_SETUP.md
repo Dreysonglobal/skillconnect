@@ -14,6 +14,7 @@ You shared a live Korapay secret key in chat. Treat it as compromised and **rota
 Run the SQL migration:
 
 - `supabase/migrations/20260330_korapay_billing.sql`
+- `supabase/migrations/20260330_korapay_amount_units.sql`
 
 You can paste it into the Supabase SQL editor, or use migrations if you already have them wired up.
 
@@ -60,6 +61,8 @@ The browser uses the Korapay public key inside `app.js`:
 
 After login, users will see billing status + buttons in the Profile page and can pay to activate/renew.
 
+**Amount units:** Korapay Checkout expects the `amount` you pass from the browser in **major units** (e.g. `300` for NGN 300). The server still stores minor units (`amount_kobo`) for consistency.
+
 ## Troubleshooting
 
 ### CORS + `404 preflight` to `/functions/v1/korapay-initiate`
@@ -69,3 +72,13 @@ If DevTools shows `korapay-initiate` **404** on the **preflight (OPTIONS)** requ
 - Confirm the function exists in Supabase Dashboard → Edge Functions.
 - Deploy with the CLI: `supabase link` then `supabase functions deploy korapay-initiate`.
 - If you are running Supabase locally, use the local URL (`http://127.0.0.1:54321`) instead of the hosted `https://<project-ref>.supabase.co` in `app.js`.
+
+### `401 Unauthorized` from `/functions/v1/korapay-initiate`
+
+This means the function did not accept your auth/session.
+
+- Confirm you can log in successfully (no `400` on `/auth/v1/token`).
+- In DevTools → Network → the **POST** to `korapay-initiate`, check the **Response JSON**:
+  - If it says `Missing Authorization header`: your request didn’t include `Authorization: Bearer <access_token>`.
+  - If it says `Unauthorized` with a `detail` like “invalid JWT”: log out and log in again.
+- If the response mentions `Invalid API key` / `No API key found`, replace `supabaseKey` in `app.js` with your Supabase **anon public key** (Project Settings → API). The `sb_publishable_...` key may not be accepted for Edge Functions.

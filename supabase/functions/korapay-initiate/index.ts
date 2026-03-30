@@ -52,7 +52,7 @@ serve(async (req) => {
   } = await userClient.auth.getUser();
 
   if (userError || !user) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    return new Response(JSON.stringify({ error: "Unauthorized", detail: userError?.message ?? null }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
@@ -88,6 +88,7 @@ serve(async (req) => {
     user_id: user.id,
     purpose,
     amount_kobo: amountKobo,
+    amount_naira: amountNgn,
     currency,
     merchant_reference: merchantReference,
     status: "pending",
@@ -103,13 +104,14 @@ serve(async (req) => {
   return new Response(
     JSON.stringify({
       reference: merchantReference,
-      amount: amountKobo,
+      // Korapay Checkout expects major currency units (e.g. NGN 300).
+      amount: amountNgn,
       currency,
       notification_url: notificationUrl,
       amount_ngn: amountNgn,
+      amount_kobo: amountKobo,
       purpose,
     }),
     { headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 });
-

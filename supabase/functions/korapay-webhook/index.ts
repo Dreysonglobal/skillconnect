@@ -113,6 +113,31 @@ serve(async (req) => {
     });
   }
 
+  const expectedAmountNgn = typeof payment.amount_naira === "number"
+    ? payment.amount_naira
+    : (typeof payment.amount_kobo === "number" ? Math.round(payment.amount_kobo / 100) : null);
+
+  const rawAmountExpected = payload.data.amount_expected ?? payload.data.amount ?? null;
+  const receivedAmountExpected = rawAmountExpected === null ? null : Number(rawAmountExpected);
+
+  if (
+    expectedAmountNgn !== null && receivedAmountExpected !== null &&
+    Number.isFinite(receivedAmountExpected) && receivedAmountExpected !== expectedAmountNgn
+  ) {
+    await admin
+      .from("billing_payments")
+      .update({
+        status: "failed",
+        korapay_reference: korapayReference,
+        raw_payload: payload,
+      })
+      .eq("id", payment.id);
+
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   if (event !== "charge.success") {
     await admin
       .from("billing_payments")
@@ -188,4 +213,3 @@ serve(async (req) => {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });
-
