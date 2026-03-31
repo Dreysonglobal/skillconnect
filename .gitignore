@@ -1,0 +1,6 @@
+# Local tools / binaries
+supabase.exe
+
+# Environment files (often contain secrets)
+.env
+.env.*
