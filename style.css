@@ -530,7 +530,7 @@ body {
     z-index: 1000;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0;
     padding: 0.85rem 1rem;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.35);
@@ -546,25 +546,14 @@ body {
     transform: translateY(-1px);
 }
 
-.customer-care-btn i {
-    font-size: 1.1rem;
-}
-
 .customer-care-btn span {
     font-weight: 600;
     font-size: 0.95rem;
 }
 
 @media (max-width: 480px) {
-    .customer-care-btn span {
-        display: none;
-    }
     .customer-care-btn {
-        width: 52px;
-        height: 52px;
-        padding: 0;
-        justify-content: center;
-        border-radius: 50%;
+        padding: 0.75rem 0.9rem;
     }
 }
 
