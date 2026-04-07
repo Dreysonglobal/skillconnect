@@ -353,6 +353,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function handleRegister(event) {
         event.preventDefault();
+
+        const termsCheckbox = document.getElementById('registerTerms');
+        if (termsCheckbox && !termsCheckbox.checked) {
+            alert('Please agree to the Terms & Conditions to create an account.');
+            termsCheckbox.focus();
+            return;
+        }
+
         const email = normalizeText(document.getElementById('registerEmail').value);
         const password = String(document.getElementById('registerPassword').value || '');
         
@@ -649,6 +657,51 @@ document.addEventListener('DOMContentLoaded', function() {
         // Auth forms
         document.getElementById('loginFormElement').addEventListener('submit', handleLogin);
         document.getElementById('registerFormElement').addEventListener('submit', handleRegister);
+
+        // Terms dialog (Register)
+        const termsDialog = document.getElementById('termsDialog');
+        const openTermsBtn = document.getElementById('openTermsBtn');
+        const closeTermsBtn = document.getElementById('closeTermsBtn');
+        const closeTermsBtn2 = document.getElementById('closeTermsBtn2');
+        const agreeTermsBtn = document.getElementById('agreeTermsBtn');
+        const termsCheckbox = document.getElementById('registerTerms');
+
+        const openTerms = () => {
+            if (!termsDialog) return;
+            document.body.classList.add('terms-open');
+            if (typeof termsDialog.showModal === 'function') {
+                termsDialog.showModal();
+            } else {
+                termsDialog.setAttribute('open', '');
+            }
+        };
+
+        const closeTerms = () => {
+            if (!termsDialog) return;
+            document.body.classList.remove('terms-open');
+            if (typeof termsDialog.close === 'function') {
+                termsDialog.close();
+            } else {
+                termsDialog.removeAttribute('open');
+            }
+        };
+
+        openTermsBtn?.addEventListener('click', openTerms);
+        closeTermsBtn?.addEventListener('click', closeTerms);
+        closeTermsBtn2?.addEventListener('click', closeTerms);
+        agreeTermsBtn?.addEventListener('click', () => {
+            if (termsCheckbox) termsCheckbox.checked = true;
+            closeTerms();
+        });
+
+        termsDialog?.addEventListener('close', () => document.body.classList.remove('terms-open'));
+        termsDialog?.addEventListener('cancel', (e) => {
+            e.preventDefault();
+            closeTerms();
+        });
+        termsDialog?.addEventListener('click', (e) => {
+            if (e.target === termsDialog) closeTerms();
+        });
         
         // Auth tabs
         document.querySelectorAll('.auth-tab').forEach(tab => {

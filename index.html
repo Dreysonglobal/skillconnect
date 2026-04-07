@@ -327,6 +327,16 @@
                                 <label>Password</label>
                                 <input type="password" id="registerPassword" required>
                             </div>
+
+                            <div class="terms-consent" role="group" aria-label="Terms and conditions">
+                                <label class="terms-checkbox">
+                                    <input type="checkbox" id="registerTerms" required>
+                                    <span>
+                                        I agree to the
+                                        <button type="button" id="openTermsBtn" class="link-button">Terms &amp; Conditions</button>
+                                    </span>
+                                </label>
+                            </div>
                             <button type="submit" class="btn-primary">Register</button>
                         </form>
                     </div>
@@ -334,6 +344,129 @@
             </div>
         </div>
     </main>
+
+    <dialog id="termsDialog" class="terms-dialog" aria-labelledby="termsTitle">
+        <div class="terms-dialog-header">
+            <h3 id="termsTitle">SkillConnect Terms &amp; Conditions</h3>
+            <button type="button" id="closeTermsBtn" class="terms-close" aria-label="Close terms and conditions">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="terms-dialog-body">
+            <p><strong>Effective date:</strong> March 30, 2026</p>
+            <p>
+                These Terms &amp; Conditions ("Terms") govern your access to and use of SkillConnect ("SkillConnect", "we", "us", "our"),
+                including the website at <strong>skillconnect.com.ng</strong> (the "Platform"). By creating an account, browsing, or using the Platform,
+                you agree to these Terms.
+            </p>
+            <p>
+                <strong>Important:</strong> SkillConnect is a marketplace that helps customers find independent professionals ("Pros") and helps Pros get discovered.
+                We are not a party to contracts between customers and Pros. Your use of the Platform is at your own risk.
+            </p>
+
+            <h4>1) Eligibility</h4>
+            <p>You must be at least 18 years old (or the age of majority in your jurisdiction) to create an account and use the Platform.</p>
+
+            <h4>2) Accounts &amp; Security</h4>
+            <ul>
+                <li>You agree to provide accurate information and to keep it up to date.</li>
+                <li>You are responsible for all activity under your account and for keeping your login details secure.</li>
+                <li>We may suspend or terminate accounts that violate these Terms or applicable laws.</li>
+            </ul>
+
+            <h4>3) What We Collect (Email Only for This Step)</h4>
+            <p>
+                For registration and login, SkillConnect collects your <strong>email address</strong> so we can uniquely identify your account and separate user logins.
+                You may also choose to provide additional profile information (such as your name, phone number, skill/profession, and location) to use Platform features.
+                Passwords are handled by our authentication provider and are not viewable by SkillConnect as plain text.
+            </p>
+
+            <h4>4) Email Communications (Updates &amp; Promotions)</h4>
+            <p>
+                By creating an account, you agree that we may send you emails about your account, Platform updates, important notices, what’s happening on
+                skillconnect.com.ng, and promotional or marketing messages. You can opt out of marketing emails at any time by using an unsubscribe link (when provided)
+                or by contacting <strong>support@skillconnect.com.ng</strong>. Account/security emails may still be sent when necessary.
+            </p>
+
+            <h4>5) Platform Rules</h4>
+            <ul>
+                <li>Do not use the Platform for illegal, fraudulent, abusive, or harmful activity.</li>
+                <li>Do not post misleading information, impersonate others, or misrepresent qualifications.</li>
+                <li>Do not attempt to disrupt, hack, or reverse engineer the Platform.</li>
+                <li>Customers and Pros must communicate and transact responsibly and safely.</li>
+            </ul>
+
+            <h4>6) Safety &amp; Due Diligence</h4>
+            <p>
+                SkillConnect does not guarantee the identity, quality, licensing, insurance, or suitability of any Pro or customer.
+                You are responsible for vetting, negotiating, and verifying all information, and for taking appropriate safety precautions.
+            </p>
+
+            <h4>7) Payments, Fees &amp; Refunds</h4>
+            <p>
+                Some features may require payment (including activation or subscription). Any prices, billing frequency, and feature access will be shown to you before payment.
+                To the fullest extent permitted by law, payments are non-refundable unless we explicitly state otherwise or applicable law requires a refund.
+            </p>
+
+            <h4>8) Content &amp; License</h4>
+            <p>
+                You retain ownership of content you submit (such as profile details and images). You grant SkillConnect a worldwide, non-exclusive, royalty-free license
+                to host, store, reproduce, display, and distribute your content on the Platform for the purpose of operating and promoting the Platform.
+            </p>
+
+            <h4>9) Intellectual Property</h4>
+            <p>
+                The Platform, branding, and all related intellectual property belong to SkillConnect and its licensors. You may not copy, modify, or distribute our materials
+                without permission.
+            </p>
+
+            <h4>10) Disclaimers</h4>
+            <p>
+                The Platform is provided on an <strong>"as is"</strong> and <strong>"as available"</strong> basis. To the fullest extent permitted by law, we disclaim all warranties
+                (express, implied, and statutory), including merchantability, fitness for a particular purpose, non-infringement, and that the Platform will be uninterrupted,
+                secure, error-free, or free of harmful components.
+            </p>
+
+            <h4>11) Limitation of Liability</h4>
+            <p>
+                To the fullest extent permitted by law, SkillConnect will not be liable for any indirect, incidental, special, consequential, exemplary, or punitive damages,
+                or for any loss of profits, data, goodwill, or reputation, arising out of or related to your use of the Platform, interactions between customers and Pros,
+                or any services performed by Pros.
+            </p>
+            <p>
+                To the fullest extent permitted by law, SkillConnect’s total liability for any claim will not exceed the amount you paid to SkillConnect in the
+                <strong>three (3) months</strong> preceding the event giving rise to the claim (or <strong>₦0</strong> if you paid nothing).
+            </p>
+
+            <h4>12) Indemnity</h4>
+            <p>
+                You agree to defend, indemnify, and hold harmless SkillConnect, its owners, employees, contractors, and partners from any claims, damages, liabilities,
+                costs, and expenses (including legal fees) arising from your use of the Platform, your content, your violation of these Terms, or your interactions with other users.
+            </p>
+
+            <h4>13) Dispute Resolution</h4>
+            <p>
+                Before filing a claim, you agree to contact us at <strong>support@skillconnect.com.ng</strong> and attempt to resolve disputes informally within 30 days.
+                Where permitted by law, disputes will be resolved by binding arbitration in Lagos, Nigeria, and you waive any right to participate in a class action.
+            </p>
+
+            <h4>14) Governing Law</h4>
+            <p>These Terms are governed by the laws of the Federal Republic of Nigeria, without regard to conflict-of-law principles.</p>
+
+            <h4>15) Changes to These Terms</h4>
+            <p>
+                We may update these Terms from time to time. If we make material changes, we will post the updated Terms on the Platform and update the effective date above.
+                Your continued use of the Platform after changes become effective means you accept the updated Terms.
+            </p>
+
+            <h4>16) Contact</h4>
+            <p>If you have questions, contact us at <strong>support@skillconnect.com.ng</strong>.</p>
+        </div>
+        <div class="terms-dialog-footer">
+            <button type="button" id="agreeTermsBtn" class="btn-primary">I Agree</button>
+            <button type="button" id="closeTermsBtn2" class="btn-secondary">Close</button>
+        </div>
+    </dialog>
 
     <!-- Footer -->
     <footer class="footer">

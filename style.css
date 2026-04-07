@@ -602,6 +602,123 @@ body {
     color: #333;
 }
 
+/* Terms & Conditions (Register) */
+.terms-consent {
+    margin: 1rem 0 1.25rem;
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    user-select: none;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    margin-top: 0.2rem;
+    width: 18px;
+    height: 18px;
+    accent-color: #4f46e5;
+    cursor: pointer;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: #4f46e5;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.link-button:hover {
+    color: #4338ca;
+}
+
+body.terms-open {
+    overflow: hidden;
+}
+
+.terms-dialog {
+    width: min(920px, calc(100vw - 2rem));
+    border: none;
+    border-radius: 14px;
+    padding: 0;
+    background: #ffffff;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.terms-dialog::backdrop {
+    background: rgba(17, 24, 39, 0.65);
+}
+
+.terms-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.terms-dialog-header h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.1rem;
+}
+
+.terms-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    cursor: pointer;
+    color: #111827;
+}
+
+.terms-close:hover {
+    background: #f9fafb;
+}
+
+.terms-dialog-body {
+    padding: 1rem 1.25rem;
+    max-height: min(70vh, 520px);
+    overflow: auto;
+    color: #374151;
+}
+
+.terms-dialog-body h4 {
+    margin: 1rem 0 0.5rem;
+    color: #111827;
+    font-size: 1rem;
+}
+
+.terms-dialog-body p {
+    margin: 0.6rem 0;
+}
+
+.terms-dialog-body ul {
+    margin: 0.5rem 0 0.75rem 1.1rem;
+}
+
+.terms-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid #e5e7eb;
+}
+
 /* Footer */
 .footer {
     background: #1f2937;
