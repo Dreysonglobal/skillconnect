@@ -604,6 +604,39 @@ document.addEventListener('DOMContentLoaded', function() {
         
         startAutoSlide();
     }
+
+    function setupPasswordToggles() {
+        document.querySelectorAll('.password-toggle[data-target]').forEach((button) => {
+            const targetId = button.getAttribute('data-target');
+            const input = targetId ? document.getElementById(targetId) : null;
+            const icon = button.querySelector('i');
+            if (!input) return;
+
+            button.addEventListener('click', () => {
+                const wasText = input.type === 'text';
+                const selectionStart = input.selectionStart;
+                const selectionEnd = input.selectionEnd;
+
+                input.type = wasText ? 'password' : 'text';
+                button.setAttribute('aria-pressed', String(!wasText));
+                button.setAttribute('aria-label', wasText ? 'Show password' : 'Hide password');
+
+                if (icon) {
+                    icon.classList.toggle('fa-eye', wasText);
+                    icon.classList.toggle('fa-eye-slash', !wasText);
+                }
+
+                input.focus({ preventScroll: true });
+                if (selectionStart !== null && selectionEnd !== null) {
+                    try {
+                        input.setSelectionRange(selectionStart, selectionEnd);
+                    } catch {
+                        // Some browsers may block selection manipulation for password inputs.
+                    }
+                }
+            });
+        });
+    }
     
     // Event Listeners
     function setupEventListeners() {
@@ -657,6 +690,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Auth forms
         document.getElementById('loginFormElement').addEventListener('submit', handleLogin);
         document.getElementById('registerFormElement').addEventListener('submit', handleRegister);
+        setupPasswordToggles();
 
         // Terms dialog (Register)
         const termsDialog = document.getElementById('termsDialog');
