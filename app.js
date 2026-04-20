@@ -42,6 +42,28 @@ document.addEventListener('DOMContentLoaded', function() {
         setInstallButtonVisible(false);
     });
 
+    function openInstallDialog() {
+        const installDialog = document.getElementById('installDialog');
+        if (!installDialog) return;
+        document.body.classList.add('terms-open');
+        if (typeof installDialog.showModal === 'function') {
+            installDialog.showModal();
+        } else {
+            installDialog.setAttribute('open', '');
+        }
+    }
+
+    function closeInstallDialog() {
+        const installDialog = document.getElementById('installDialog');
+        if (!installDialog) return;
+        document.body.classList.remove('terms-open');
+        if (typeof installDialog.close === 'function') {
+            installDialog.close();
+        } else {
+            installDialog.removeAttribute('open');
+        }
+    }
+
     function normalizeText(value) {
         return String(value ?? '').trim().replace(/\s+/g, ' ');
     }
@@ -724,7 +746,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             if (isIosDevice()) {
-                alert('To install on iPhone/iPad: tap Share, then "Add to Home Screen".');
+                openInstallDialog();
                 return;
             }
             alert('Install is not available yet. Please use the browser menu and look for "Install app".');
@@ -783,6 +805,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         termsDialog?.addEventListener('click', (e) => {
             if (e.target === termsDialog) closeTerms();
+        });
+
+        // Install dialog (iPhone/iPad helper)
+        const installDialog = document.getElementById('installDialog');
+        const closeInstallBtn = document.getElementById('closeInstallBtn');
+        const closeInstallBtnX = document.getElementById('closeInstallBtnX');
+
+        closeInstallBtn?.addEventListener('click', closeInstallDialog);
+        closeInstallBtnX?.addEventListener('click', closeInstallDialog);
+
+        installDialog?.addEventListener('close', () => document.body.classList.remove('terms-open'));
+        installDialog?.addEventListener('cancel', (e) => {
+            e.preventDefault();
+            closeInstallDialog();
+        });
+        installDialog?.addEventListener('click', (e) => {
+            if (e.target === installDialog) closeInstallDialog();
         });
         
         // Auth tabs
