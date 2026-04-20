@@ -14,6 +14,33 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentUser = null;
     let currentSlide = 0;
     let slideInterval;
+    let deferredInstallPrompt = null;
+
+    function isStandaloneDisplayMode() {
+        return window.matchMedia?.('(display-mode: standalone)')?.matches || window.navigator.standalone === true;
+    }
+
+    function isIosDevice() {
+        return /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+    }
+
+    function setInstallButtonVisible(visible) {
+        const btn = document.getElementById('installAppBtn');
+        if (!btn) return;
+        btn.style.display = visible ? 'inline-flex' : 'none';
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        // Chrome/Edge: capture the install prompt for a user gesture.
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        if (!isStandaloneDisplayMode()) setInstallButtonVisible(true);
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        setInstallButtonVisible(false);
+    });
 
     function normalizeText(value) {
         return String(value ?? '').trim().replace(/\s+/g, ' ');
@@ -681,6 +708,27 @@ document.addEventListener('DOMContentLoaded', function() {
             navigateTo('auth');
             switchAuthTab('register');
         });
+        document.getElementById('installAppBtn')?.addEventListener('click', async () => {
+            if (isStandaloneDisplayMode()) {
+                setInstallButtonVisible(false);
+                return;
+            }
+            if (deferredInstallPrompt && typeof deferredInstallPrompt.prompt === 'function') {
+                try {
+                    deferredInstallPrompt.prompt();
+                    await deferredInstallPrompt.userChoice;
+                } finally {
+                    deferredInstallPrompt = null;
+                    setInstallButtonVisible(false);
+                }
+                return;
+            }
+            if (isIosDevice()) {
+                alert('To install on iPhone/iPad: tap Share, then "Add to Home Screen".');
+                return;
+            }
+            alert('Install is not available yet. Please use the browser menu and look for "Install app".');
+        });
         
         // Mobile menu
         mobileMenu.addEventListener('click', () => {
@@ -791,6 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadStates();
         setupSlider();
         setupEventListeners();
+        if (isIosDevice() && !isStandaloneDisplayMode()) setInstallButtonVisible(true);
         checkAuth();
     }
     

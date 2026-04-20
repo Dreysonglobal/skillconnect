@@ -8,9 +8,18 @@
     <link rel="canonical" href="https://skillconnect.com.ng/" />
     <meta name="robots" content="index,follow" />
 
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <!-- Icons (favicon / Google Search) -->
     <link rel="icon" href="/favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png">
+    <link rel="icon" href="/icons/icon-512.png" sizes="512x512" type="image/png">
+    <link rel="apple-touch-icon" href="/icons/icon-180.png" sizes="180x180">
 
     <!-- Open Graph (WhatsApp/Facebook share preview) -->
     <meta property="og:site_name" content="SkillConnect" />
@@ -126,6 +135,7 @@
                             <button class="btn-primary" id="homeSearchBtn"><i class="fas fa-search"></i> Search</button>
                             <button class="btn-secondary" id="homeLoginBtn"><i class="fas fa-right-to-bracket"></i> Login</button>
                             <button class="btn-secondary" id="homeRegisterBtn"><i class="fas fa-user-plus"></i> Register</button>
+                            <button class="btn-secondary" id="installAppBtn" type="button" style="display: none;"><i class="fas fa-download"></i> Install App</button>
                         </div>
                     </div>
                 </div>
@@ -514,5 +524,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
     <script src="app.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/sw.js").catch(() => { });
+            });
+        }
+    </script>
 </body>
 </html>
