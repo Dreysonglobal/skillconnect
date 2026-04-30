@@ -114,9 +114,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (!subscriptionActive) {
-            billingMessage.textContent = 'Your subscription is inactive. Pay NGN 300 to renew your monthly subscription and stay public.';
-            payActivationBtn.style.display = 'none';
-            paySubscriptionBtn.style.display = 'inline-flex';
+            billingMessage.textContent = 'To make your skill and profile public and findable, you need to pay NGN 300.';
+            payActivationBtn.style.display = 'inline-flex';
+            paySubscriptionBtn.style.display = 'none';
             return;
         }
 
